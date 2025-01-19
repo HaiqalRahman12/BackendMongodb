@@ -63,4 +63,16 @@ router.put('/:id', authMiddleware, TodoController.updateTodoById);
  */
 router.delete('/:id', authMiddleware, TodoController.deleteTodoById);
 
+/**
+ * POST /api/todos/{id}/like
+ * @summary Like or unlike a todo
+ * @tags Todos
+ * @param {string} id.path.required - Todo ID
+ * @return {object} 200 - Like/unlike status
+ * @return {object} 404 - Todo not found
+ * @return {object} 500 - Server error
+ */
+router.post('/:id/like', authMiddleware, TodoController.toggleLike);
+
+
 module.exports = router;

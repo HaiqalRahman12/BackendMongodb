@@ -10,8 +10,9 @@ const authMiddleware = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); // Deklarasi variabel 'decoded'
+        console.log('Decoded user:', decoded); // Perbaiki dengan menggunakan 'decoded'
+        req.user = decoded; // Tambahkan decoded ke req.user
         next();
     } catch (error) {
         res.status(401).json({ message: 'Invalid token' });

@@ -17,6 +17,12 @@ const todoSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
+    likedBy: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', // Referensi ke model User
+        },
+    ], // Menyimpan daftar user ID yang menyukai todo
 }, {
     timestamps: true,
 });

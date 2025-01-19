@@ -92,6 +92,51 @@ class TodoController {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     }
+
+        // ... fungsi lainnya
+
+        async toggleLike(req, res) {
+            const { id } = req.params; // ID Todo yang akan di-like
+            const userId = req.user.id; // ID User yang berasal dari JWT
+        
+            try {
+                // Cari todo berdasarkan ID
+                const todo = await Todo.findById(id);
+                if (!todo) {
+                    return res.status(404).json({ message: 'Todo not found' });
+                }
+        
+                console.log('Todo before modification:', todo);
+        
+                // Periksa apakah user sudah menyukai Todo
+                const isLiked = todo.likedBy.includes(userId);
+        
+                if (isLiked) {
+                    // Jika sudah disukai, hapus user dari daftar `likedBy`
+                    todo.likedBy = todo.likedBy.filter((likedId) => likedId.toString() !== userId);
+                } else {
+                    // Jika belum disukai, tambahkan user ke daftar `likedBy`
+                    todo.likedBy.push(userId);
+                }
+        
+                // Simpan perubahan ke database
+                const updatedTodo = await todo.save();
+        
+                console.log('Todo after modification:', updatedTodo);
+        
+                res.status(200).json({
+                    message: isLiked ? 'Unliked successfully' : 'Liked successfully',
+                    liked: !isLiked,
+                    likedBy: updatedTodo.likedBy, // Kirim array likedBy terbaru
+                    likedByCount: updatedTodo.likedBy.length, // Total jumlah like
+                });
+            } catch (error) {
+                console.error('Error in toggleLike:', error);
+                res.status(500).json({ message: 'Server error', error: error.message });
+            }
+        }
+        
+        
 }
 
 module.exports = new TodoController();
